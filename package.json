@@ -1,0 +1,29 @@
+{
+  "name": "symbol-description",
+  "version": "1.0.0",
+  "description": "Returns description of provided symbol",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard",
+    "unit": "node test.js",
+    "test": "npm run lint && npm run unit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mightyiam/symbol-description.git"
+  },
+  "keywords": [
+    "description",
+    "symbol",
+    "string"
+  ],
+  "author": "Shahar Or <mightyiampresence@gmail.com> (mightyiam)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mightyiam/symbol-description/issues"
+  },
+  "homepage": "https://github.com/mightyiam/symbol-description#readme",
+  "devDependencies": {
+    "standard": "^8.6.0"
+  }
+}
