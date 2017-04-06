@@ -3,7 +3,7 @@ const subject = require('.')
 
 const assertionData = [
   {
-    sym: Symbol(),
+    sym: Symbol(), // eslint-disable-line symbol-description
     str: undefined
   },
   {
