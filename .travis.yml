@@ -1,4 +1,13 @@
 language: node_js
 node_js:
-  - "node"
-  - "6"
+  - node
+  - lts/*
+before_install:
+  - npm install -g npm
+  - npm install -g greenkeeper-lockfile@1
+install: npm install
+before_script: greenkeeper-lockfile-update
+script:
+  - commitlint-travis
+  - npm run test
+after_script: greenkeeper-lockfile-upload
