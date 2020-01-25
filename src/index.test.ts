@@ -22,7 +22,7 @@ const assertionData = [
 ]
 
 assertionData.forEach(({ sym, str }) => {
-  console.log(`\`${String(sym)}\` -> ${str !== undefined ? `'${str}'` : undefined}`)
+  console.log(`\`${String(sym)}\` -> ${str !== undefined ? `'${str}'` : String(undefined)}`)
   strictEqual(subject(sym), str)
 })
 
@@ -31,7 +31,7 @@ throws(() => looseSubject('foo'), TypeError)
 throws(() => looseSubject(1), TypeError)
 throws(() => looseSubject([]), TypeError)
 throws(() => looseSubject({}), TypeError)
-throws(() => looseSubject(() => {}), TypeError)
+throws(() => looseSubject(() => {}), TypeError) // eslint-disable-line @typescript-eslint/no-empty-function
 throws(() => looseSubject(new Map()), TypeError)
 throws(() => looseSubject(new Set()), TypeError)
 
