@@ -1,38 +1,56 @@
-import { throws, strictEqual } from 'assert'
+import test, { Macro } from 'ava'
 import defaultExport, { symbolDescription as subject } from '.'
 
-const assertionData = [
-  {
-    sym: Symbol(), // eslint-disable-line symbol-description
-    str: undefined
-  },
-  {
-    // Even though TypeScript doesn't think so, API seems to allow this.
-    sym: Symbol.for(undefined as any),
-    str: 'undefined'
-  },
-  {
-    sym: Symbol('foo'),
-    str: 'foo'
-  },
-  {
-    sym: Symbol.for('foo'),
-    str: 'foo'
-  }
-]
+const output: Macro<[symbol, string | undefined]> = (t, sym, str) => {
+  t.is(subject(sym), str)
+}
 
-assertionData.forEach(({ sym, str }) => {
-  console.log(`\`${String(sym)}\` -> ${str !== undefined ? `'${str}'` : String(undefined)}`)
-  strictEqual(subject(sym), str)
-})
+test(
+  '`Symbol()` -> undefined',
+  output,
+  // eslint-disable-next-line symbol-description
+  Symbol(),
+  undefined
+)
+test(
+  "`Symbol.for(undefined)` -> 'undefined'",
+  output,
+  // Even though TypeScript doesn't think so, API seems to allow this.
+  Symbol.for(undefined as any),
+  'undefined'
+)
+test(
+  "`Symbol('foo')` -> 'foo'",
+  output,
+  Symbol('foo'),
+  'foo'
+)
+test(
+  "`Symbol.for('foo')` -> 'foo'",
+  output,
+  Symbol.for('foo'),
+  'foo'
+)
 
 const looseSubject = subject as any
-throws(() => looseSubject('foo'), TypeError)
-throws(() => looseSubject(1), TypeError)
-throws(() => looseSubject([]), TypeError)
-throws(() => looseSubject({}), TypeError)
-throws(() => looseSubject(() => {}), TypeError) // eslint-disable-line @typescript-eslint/no-empty-function
-throws(() => looseSubject(new Map()), TypeError)
-throws(() => looseSubject(new Set()), TypeError)
+const typeError: Macro<[unknown]> = (t, v) => {
+  t.throws(() => {
+    looseSubject(v)
+  })
+}
+typeError.title = (input) => {
+  if (input === undefined) throw new Error()
+  return `throws a TypeError when input is ${input}`
+}
 
-strictEqual(subject, defaultExport)
+test('string', typeError, 'foo')
+test('number', typeError, 1)
+test('array', typeError, [])
+test('object', typeError, {})
+test('function', typeError, () => {})
+test('map', typeError, new Map())
+test('set', typeError, new Set())
+
+test('default export identical to `symbolDescription` named export', (t) => {
+  t.is(subject, defaultExport)
+})
